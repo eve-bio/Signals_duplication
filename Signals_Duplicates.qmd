@@ -1,0 +1,93 @@
+---
+title: "Signals Duplicates Analysis"
+subtitle: "Quality Control Report for Live Signal Data"
+author: "Data Team"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: false
+    theme: bootstrap
+    highlight-style: github
+---
+
+## Overview
+
+This document analyzes duplicate signals in the live data to identify potential data quality issues and ensure signal integrity across different plates and targets.
+
+## Setup
+
+Loading required libraries for data validation and visualization:
+
+```{r setup, message=FALSE, warning=FALSE}
+library(ever)
+library(dplyr)
+library(DT)
+```
+
+## Data Validation
+
+Running validation checks on live signals to identify duplicates:
+
+```{r validate-signals, message=FALSE}
+# Validate live signals and identify duplicates
+dupes <- validate_live_signals()
+
+# Display summary statistics
+cat("Total duplicate records found:", nrow(dupes), "\n")
+if (nrow(dupes) > 0) {
+  cat("Unique targets affected:", length(unique(dupes$`Target Name`)), "\n")
+  cat("Unique plates affected:", length(unique(dupes$`Plate Barcode`)), "\n")
+}
+```
+
+## Detailed Duplicate Records
+
+Complete view of all duplicate records with full details:
+
+```{r full-duplicates-table}
+if (nrow(dupes) > 0) {
+  datatable(dupes, 
+            caption = "All Duplicate Signal Records",
+            options = list(
+              pageLength = 10,
+              scrollX = TRUE,
+              dom = 'Blfrtip'
+            ),
+            filter = 'top') %>%
+    formatStyle(columns = colnames(dupes), fontSize = '12px')
+} else {
+  cat("No duplicate records found.")
+}
+```
+
+## Summary by Target and Plate
+
+Consolidated view showing unique combinations of targets, plates, and data types affected by duplicates:
+
+```{r summary-table}
+if (nrow(dupes) > 0) {
+  summary_data <- dupes %>% 
+    select(`Target Name`, `Plate Barcode`, datatype) %>% 
+    distinct() %>%
+    arrange(`Target Name`, `Plate Barcode`)
+  
+  datatable(summary_data,
+            caption = "Unique Target-Plate-Datatype Combinations with Duplicates",
+            options = list(
+              pageLength = 15,
+              scrollX = TRUE,
+              dom = 'Blfrtip'
+            ),
+            filter = 'top') %>%
+    formatStyle(columns = colnames(summary_data), fontSize = '12px')
+} else {
+  cat("No duplicate combinations found.")
+}
+```
+
+
+---
+
+*Report generated on `r Sys.time()` using the ever package validation functions.*
