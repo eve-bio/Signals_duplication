@@ -68,10 +68,16 @@ Consolidated view showing unique combinations of targets, plates, and data types
 
 ```{r summary-table}
 if (nrow(dupes) > 0) {
-  summary_data <- dupes %>% 
-    select(`Target Name`, `Plate Barcode`, datatype) %>% 
-    distinct() %>%
-    arrange(`Target Name`, `Plate Barcode`)
+    ever::authenticate_drive_sheets() 
+    sheet_id <- gs4_create("Dupes_Data", sheets = "Sheet1")
+    write_sheet(dupes, ss = sheet_id, sheet = "Sheet1")
+    # message("Sheet URL: https://docs.google.com/spreadsheets/d/", sheet_id)
+    drive_share(sheet_id, role = "writer", type = "domain", domain = "evebio.org")
+
+    summary_data <- dupes %>% 
+        select(`Target Name`, `Plate Barcode`, datatype) %>% 
+        distinct() %>%
+        arrange(`Target Name`, `Plate Barcode`)
   
   datatable(summary_data,
             caption = "Unique Target-Plate-Datatype Combinations with Duplicates",
@@ -87,6 +93,8 @@ if (nrow(dupes) > 0) {
 }
 ```
 
+
+Sheet URL: `paste0("https://docs.google.com/spreadsheets/d/", sheet_id)`
 
 ---
 

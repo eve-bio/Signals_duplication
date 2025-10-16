@@ -1,0 +1,14 @@
+name: signals_duplicates
+title: Signals_Duplicates
+username: jbrown
+account: jbrown
+server: connect.evebio.org
+hostUrl: https://connect.evebio.org/__api__
+appId: 362
+bundleId: 45011
+url: https://connect.evebio.org/content/31374d7c-7cbf-4b48-8070-a190da22dbf9/
+version: 1
+quarto_version: 1.8.24
+quarto_engines: knitr
+asMultiple: FALSE
+asStatic: FALSE
