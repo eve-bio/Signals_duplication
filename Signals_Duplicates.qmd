@@ -24,6 +24,8 @@ Loading required libraries for data validation and visualization:
 library(ever)
 library(dplyr)
 library(DT)
+library(googledrive)
+library(googlesheets4)
 ```
 
 ## Data Validation
@@ -93,8 +95,8 @@ if (nrow(dupes) > 0) {
 }
 ```
 
-
-Sheet URL: `paste0("https://docs.google.com/spreadsheets/d/", sheet_id)`
+Sheet URL:
+[`r paste0("https://docs.google.com/spreadsheets/d/", sheet_id)`](`r paste0("https://docs.google.com/spreadsheets/d/", sheet_id)`)
 
 ---
 
